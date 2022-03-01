@@ -12,6 +12,7 @@ import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import IconButton from '@mui/material/IconButton';
 import { useNavigate } from 'react-router-dom';
 
@@ -40,12 +41,28 @@ function Dashboard (props) {
         targetUser: id
       })
    });
-   console.log(deleteResponse)
-   
    var deleteResponse1 = await deleteResponse.json();
    console.log(deleteResponse1.message);
    setIncrement(0);
   };
+
+   const toggleAdmin = async (id) => {
+    var toggleResponse = await fetch("/user", {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json',
+        'x-access-token': `${localStorage.getItem(localStorage.getItem('currentEmail'))}`
+      },
+      body: JSON.stringify({
+        _id: id
+      })
+   });
+   console.log('toggle Admin response',toggleResponse);
+   setIncrement(0);
+   };
+ 
+   
+ 
   const columns = [
     { field: 'id', headerName: 'ID', width: 250},
     { field: 'email', headerName: 'Email' ,width: 210},
@@ -55,9 +72,10 @@ function Dashboard (props) {
     {field: 'delete', headerName: 'Delete', 
     renderCell: (params) => (
       <IconButton aria-label="delete" color="primary" onClick={async ()=>{
+        if(window.confirm(`Delete item ${params.row.first_name} ${params.row.last_name}?`)){
         console.log(params.row.id);
         deleteUser(params.row.id);
-
+        }
         }}>
 <DeleteIcon/>
     </IconButton>
@@ -68,7 +86,15 @@ function Dashboard (props) {
         console.log(params.row)
         }}>
       <EditIcon/></IconButton>
-    )}
+    )},
+    {field: 'toggle_admin', headerName: 'Toggle Admin', 
+    renderCell: (params) => (
+      <IconButton aria-label="toggle_admin" color="primary" onClick={async ()=>{
+        console.log(params.row);
+        toggleAdmin(params.row.id);
+        }}>
+      <AdminPanelSettingsIcon/></IconButton>
+    ),width: 165}
   ];
   React.useEffect(() => {
     

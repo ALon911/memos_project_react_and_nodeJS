@@ -1,16 +1,16 @@
 import React from 'react';
 import {Container, Nav,Navbar} from 'react-bootstrap';
-import {Link} from 'react-router-dom';
-
+import {Link, Navigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 const Navbar1 = (props) => {
-
+  const navigate = useNavigate();
   const logout=(e) =>{
     var trick = localStorage.getItem('currentEmail');
     localStorage.removeItem(trick);
     localStorage.removeItem('currentEmail');
-
     props.disconnect();
     console.log(props.isLoggedIn);
+    Navigate('/login');
   };
   React.useEffect(()=> {
     console.log(props.isLoggedIn);

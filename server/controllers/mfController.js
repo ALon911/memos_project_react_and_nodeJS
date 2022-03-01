@@ -23,7 +23,25 @@ const deleteUser = async (req, res) => {
     res.status(500).send(JSON.stringify({message: 'problem with delete!'}));
   }
 }
+const toggleUser = (req, res) =>
+{
+    
 
+    User.findOne({_id: req.body._id})
+    .then(user => {
+        console.log(user);
+      if (user.userType == 'user'){
+        user.userType = 'admin';
+      }
+      else{
+        user.userType = 'user';
+      }
+      user.save(err => console.log(err));
+      res.send('user edited successfully');
+  });
+
+
+}
 
 
 const hello_world = async (req, res) => {
@@ -214,5 +232,6 @@ module.exports = {
     register,
     login,
     getUsers,
-    deleteUser
+    deleteUser,
+    toggleUser
 }

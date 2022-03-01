@@ -17,4 +17,5 @@ router.post("/login", mfController.login);
 
 
 router.get("/users", isAdmin, mfController.getUsers );
+router.delete("/user", isAdmin, mfController.deleteUser );
 module.exports = router;

@@ -20,6 +20,7 @@ import './App.css';
 function Dashboard (props) {
 
   const [renderedData, setRenderedData] = React.useState('');
+  const [bigMessage, setBigMessage] = React.useState('');
   const [increment, setIncrement] = React.useState(0);
   const [realData, setRealData] = React.useState([]);
   const [temp, setTemp] = React.useState([]);
@@ -28,16 +29,35 @@ function Dashboard (props) {
       e.preventDefault();
       setIncrement(increment+1);
   }
-
+  const deleteUser = async (id) => {
+    var deleteResponse = await fetch("/user", {
+      method: 'DELETE',
+      headers: {
+        'Content-type': 'application/json',
+        'x-access-token': `${localStorage.getItem(localStorage.getItem('currentEmail'))}`
+      },
+      body: JSON.stringify({
+        targetUser: id
+      })
+   });
+   console.log(deleteResponse)
+   
+   var deleteResponse1 = await deleteResponse.json();
+   console.log(deleteResponse1.message);
+   setIncrement(0);
+  };
   const columns = [
     { field: 'id', headerName: 'ID', width: 250},
+    { field: 'email', headerName: 'Email' ,width: 210},
     { field: 'first_name', headerName: 'First name' },
     { field: 'last_name', headerName: 'Last name'},
     { field: 'userType', headerName: 'Role'},
     {field: 'delete', headerName: 'Delete', 
     renderCell: (params) => (
       <IconButton aria-label="delete" color="primary" onClick={async ()=>{
-        console.log(params.row);
+        console.log(params.row.id);
+        deleteUser(params.row.id);
+
         }}>
 <DeleteIcon/>
     </IconButton>
@@ -64,49 +84,48 @@ function Dashboard (props) {
       }
   
   async function render1 (){
-    if (realData.length == 0){
-      var fetchData = await fetch("/users", {
-      method: 'GET',
-      headers: {
-        'Content-type': 'application/json',
-        'x-access-token': `${localStorage.getItem(localStorage.getItem('currentEmail'))}`
-      }
-   })
-  
-   
-   var dataItems = await fetchData.json();
-  
-        users = await dataItems.map((val)=> {
-          val.id = val._id;
-          return val;
-        });
-    
-      console.log(users);
+try {
+  var fetchData = await fetch("/users", {
+  method: 'GET',
+  headers: {
+    'Content-type': 'application/json',
+    'x-access-token': `${localStorage.getItem(localStorage.getItem('currentEmail'))}`
+  }
+});
 
-      console.log('this data', users);
 
-        setRealData(users);
-        runOnce();
-      }
+var dataItems = await fetchData.json();
+console.log('my data' ,dataItems.result);
+    users = await dataItems.result.map((val)=> {
+      val.id = val._id;
+      return val;
+    });
+
+  console.log(users);
+
+  console.log('this data', users);
+
+    setRealData(users);
+  
+} catch (error) {
+  setBigMessage('not authorized');
+  setIncrement(increment+1);
+}
+ 
+        setIncrement(increment+1);
   
       }
 
  
-  function runOnce(){
-    if (users != 'undefined'){
-      if (users[0].length > 0){
-      setIncrement(increment+1);
-      }
-  }
-}
 
 
-}, [renderedData]) // this diff is necessary
+
+}, [renderedData,increment]) // this diff is necessary
 
 
   return (
 
-<div><Container>
+<div>{!bigMessage ? (<Container>
     <h1>Dashboard</h1>
       <div style={{ height: 400, width: '100%' }}>
         <DataGrid
@@ -116,7 +135,7 @@ function Dashboard (props) {
           rowsPerPageOptions={[5]}      
         />
       </div>
-      </Container></div>
+      </Container>) : (<h1>Not Authorized!</h1>)}</div>
   );
 }
 

@@ -7,8 +7,24 @@ const mongoose = require("mongoose");
 
 const getUsers = async (req, res) => {
   result = await User.find({});
-  res.status(200).send(JSON.stringify(result));
+  console.log('alon data', result);
+  res.status(200).send(JSON.stringify({result}));
+
 }
+
+
+const deleteUser = async (req, res) => {
+  console.log(res);
+
+  result = await User.deleteOne({_id: req.body.targetUser});
+  if (result){
+  res.status(200).send(JSON.stringify({message: 'success! oh yeah!! deleted.'}));
+  }else{
+    res.status(500).send(JSON.stringify({message: 'problem with delete!'}));
+  }
+}
+
+
 
 const hello_world = async (req, res) => {
   var data1 = await Memo.find({writtenBy: req.user.user_id});
@@ -197,5 +213,6 @@ module.exports = {
     editMemo,
     register,
     login,
-    getUsers
+    getUsers,
+    deleteUser
 }

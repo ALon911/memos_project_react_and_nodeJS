@@ -27,8 +27,8 @@ useEffect(() => {
   console.log(isLoggedIn);
   console.log(isLoggedIn);
   console.log(isLoggedIn);
-  if (email1 != ''){
-    console.log(email1)
+  console.log('alon test',email1, localStorage.getItem('currentEmail'));
+  if (email1 != '' || localStorage.getItem('currentEmail') != null){
     setLoggedIn(true);
   }else{
     setLoggedIn(false);

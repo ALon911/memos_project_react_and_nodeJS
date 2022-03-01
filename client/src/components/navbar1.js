@@ -5,7 +5,10 @@ import {Link} from 'react-router-dom';
 const Navbar1 = (props) => {
 
   const logout=(e) =>{
+    var trick = localStorage.getItem('currentEmail');
+    localStorage.removeItem(trick);
     localStorage.removeItem('currentEmail');
+
     props.disconnect();
     console.log(props.isLoggedIn);
   };

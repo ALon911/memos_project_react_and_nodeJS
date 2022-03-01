@@ -10,7 +10,7 @@ const Navbar1 = (props) => {
     localStorage.removeItem('currentEmail');
     props.disconnect();
     console.log(props.isLoggedIn);
-    Navigate('/login');
+    navigate('/login');
   };
   React.useEffect(()=> {
     console.log(props.isLoggedIn);

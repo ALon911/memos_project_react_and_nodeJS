@@ -138,6 +138,30 @@ function App(props) {
     setCount1(count1+1); 
     
   };
+  const handleAddMemoEnter = (e) => {
+    console.log(e);
+    if (e.key == 'Enter'){
+    fetch('/main', {
+      headers: {
+        'Content-type': 'application/json',
+        'x-access-token': `${localStorage.getItem(localStorage.getItem('currentEmail'))}`
+      },
+      method: 'POST',
+      body: JSON.stringify({
+        description: text,
+        deleted: false
+      })
+    }).then((res) => res.json())
+    .then((data) => 
+    {
+      console.log(data);
+       
+      setInfo(info.concat({_id: data._id, description: text, deleted: false}));
+      setText('');
+    })
+    setCount1(count1+1); 
+  }
+  };
 
   const filterDeleted = () => {
     
@@ -228,10 +252,10 @@ function App(props) {
     <div className="App">
 
       <h1>Welcome {name} !!</h1>
-      <header className="App-header">
+      <header className="App-header" >
         
-        <input className="memo" type="text" value={text} onChange={handleText} />
-        <Button type="button" variant="success" onClick={handleAddMemo}>
+        <input className="memo" type="text" value={text} onKeyPress={(e) => handleAddMemoEnter(e)} onChange={handleText} />
+        <Button type="button" variant="success"  onClick={handleAddMemo}>
         הוסף תזכורת
         </Button>
         <p>{!data ? "Loading..." : data}</p>

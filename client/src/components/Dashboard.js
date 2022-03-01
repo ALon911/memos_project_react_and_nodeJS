@@ -52,7 +52,11 @@ function Dashboard (props) {
   ];
   React.useEffect(() => {
     
-
+    //changing the html to hebrew
+    var newLang = 'he';
+    document.documentElement.lang = newLang; 
+    document.getElementsByTagName('html')[0].setAttribute("dir", "ltr");
+    document.title = "Alon's Memo App";
     var users;
     if ((increment)== 0 ){
       render1();

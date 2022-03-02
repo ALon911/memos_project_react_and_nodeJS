@@ -23,7 +23,11 @@ function Home(props) {
         setIncrement(increment+1);
     }
     React.useEffect(() => {
-
+    //changing the html to hebrew
+    var newLang = 'he';
+    document.documentElement.lang = newLang; 
+    document.getElementsByTagName('html')[0].setAttribute("dir", "ltr");
+    document.title = "Alon's Memo App";
       props.getPath(window.location.pathname);
 
     if (increment != 0) {

@@ -143,16 +143,31 @@ const editMemo = (req, res) =>
 
 
 }
-const deleteMemos = (req, res) =>
+const deleteMemos = async (req, res) =>
 {
+  
+  console.log('very important alon !!! <<<<<< 2022 ', req.body._id);
+  console.log(req.user.user_id);
     if ( req.body._id !=undefined){
+
+    
     Memo.deleteMany({ _id: req.body._id }, function (err) {
         if (err) {
             return handleError(err)};
             
       });
-    }
+      var whatt = await Memo.find({writtenBy: req.user.user_id});
+      if (!(whatt && whatt.length)){
+      User.updateOne({_id: req.user.user_id}, { $set: { memos: [] }}, function(err, affected){
+        console.log('affected: ', affected);
+    });
+      }
+
+  
+
+      // console.log('alon check if success ? ',result);
       res.send('deleted');
+}
 }
 const register = async (req, res) => {
 

@@ -16,7 +16,11 @@ function Register(props) {
       setIncrement(increment+1);
   }
   React.useEffect(() => {
-    
+        //changing the html to hebrew
+        var newLang = 'he';
+        document.documentElement.lang = newLang; 
+        document.getElementsByTagName('html')[0].setAttribute("dir", "ltr");
+        document.title = "Alon's Memo App";
   if (increment != 0) {
       var email = document.getElementById('email').value;
       var password = document.getElementById('password').value;

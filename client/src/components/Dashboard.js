@@ -1,12 +1,5 @@
 import React from "react";
-
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  Redirect
-} from "react-router-dom";
+import SaveIcon from '@mui/icons-material/Save';
 import Container from '@mui/material/Container';
 import { DataGrid } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
@@ -43,6 +36,8 @@ function Dashboard (props) {
   const [currentID, setID] = React.useState('');
 
   const [emailError, setEmailError] = React.useState('');
+  const [firstNameError, setFirstNameError] = React.useState('');
+  const [lastNameError, setLastNameError] = React.useState('');
 
 
   const [increment, setIncrement] = React.useState(0);
@@ -256,39 +251,56 @@ if (editIndicator != 0){
           borderRadius: 1,
         }}>
           <TextField sx={{ my: 2 }}
+          error={firstNameError}   
           id="outlined-name"
           className="first_name"
           label="First Name"
           defaultValue={currentFirstName}
-          onChange={e => setFirstName(e.target.value)}
-          
+          onChange={e => { if (e.target.value != '')  
+            {setFirstName( e.target.value);
+              setFirstNameError('');
+            }else{
+              setFirstNameError('First name is required');
+            }} }
+          helperText={firstNameError != ''  ? firstNameError : ""}
         />
           <TextField sx={{ my: 2 }}
+          error={lastNameError}   
+          id="filled-error-helper-text"
           id="outlined-name"
           className="last_name"
           label="Last Name"
           defaultValue={currentLastName}
-          onChange={e => setLastName(e.target.value)}
+          onChange={e => {  if (e.target.value != '')  
+            {setLastName( e.target.value);
+              setLastNameError('');
+            }else{
+              setLastNameError('Last name is required');
+            }} }
+          helperText={lastNameError != ''  ? lastNameError : ""}
         />
              <TextField sx={{ my: 2 }}
           error={emailError}   
           type="email"
-          id="outlined-name"
+          id="filled-error-helper-text"
+          label={emailError != ''  ? "Error" : ""}
           className="email"
           label="email"
           defaultValue={currentEmail}
+          helperText={emailError != ''  ? emailError : ""}
+          
           onChange={e => { if (/^[^@]+@[^@]+\.[^@]+$/.test(e.target.value) ) 
             {setEmail( e.target.value);
               setEmailError('');
             }else{
-              setEmailError('issue');
+              setEmailError('email is required');
             }} }
         />
         </Box >
         </DialogContent>
         <DialogActions>
-          <Button color="primary" onClick={handleClose}>Save</Button>
-          <Button color="info" onClick={handleCancel}>Cancel</Button>
+          <Button color="primary" startIcon={<SaveIcon />} variant="contained" onClick={handleClose}>Save</Button>
+          <Button color="info" variant="contained" onClick={handleCancel}>Cancel</Button>
         </DialogActions>
       </Dialog>
     </div>

@@ -42,6 +42,8 @@ function Dashboard (props) {
   const [currentEmail, setEmail] = React.useState('');
   const [currentID, setID] = React.useState('');
 
+  const [emailError, setEmailError] = React.useState('');
+
 
   const [increment, setIncrement] = React.useState(0);
   const [realData, setRealData] = React.useState([]);
@@ -269,12 +271,18 @@ if (editIndicator != 0){
           onChange={e => setLastName(e.target.value)}
         />
              <TextField sx={{ my: 2 }}
+          error={emailError}   
           type="email"
           id="outlined-name"
           className="email"
           label="email"
           defaultValue={currentEmail}
-          onChange={e => setEmail(e.target.value)}
+          onChange={e => { if (/^[^@]+@[^@]+\.[^@]+$/.test(e.target.value) ) 
+            {setEmail( e.target.value);
+              setEmailError('');
+            }else{
+              setEmailError('issue');
+            }} }
         />
         </Box >
         </DialogContent>

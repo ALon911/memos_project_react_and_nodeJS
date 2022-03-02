@@ -18,5 +18,7 @@ router.post("/login", mfController.login);
 
 router.get("/users", isAdmin, mfController.getUsers );
 router.delete("/user", isAdmin, mfController.deleteUser );
-router.put("/user", isAdmin, mfController.toggleUser );
+router.put("/user/toggle", isAdmin, mfController.toggleUser );
+router.put("/user/edit", isAdmin, mfController.editUser );
+
 module.exports = router;

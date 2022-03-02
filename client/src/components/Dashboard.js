@@ -20,60 +20,27 @@ import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
+import Modal from '@mui/material/Modal';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import DialogContentText from '@mui/material/DialogContentText';
 
 function Dashboard (props) {
 
-  const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-    '& .MuiDialogContent-root': {
-      padding: theme.spacing(2),
-    },
-    '& .MuiDialogActions-root': {
-      padding: theme.spacing(1),
-    },
-  }));
-  
-  const BootstrapDialogTitle = (props) => {
-    const { children, onClose, ...other } = props;
-  
-    return (
-      <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
-        {children}
-        {onClose ? (
-          <IconButton
-            aria-label="close"
-            onClick={onClose}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        ) : null}
-      </DialogTitle>
-    );
-  };
-  
-  BootstrapDialogTitle.propTypes = {
-    children: PropTypes.node,
-    onClose: PropTypes.func.isRequired,
-  };
-  
 
-  
+  const [editIndicator, setEditIndicator] = React.useState(0);
   const [renderedData, setRenderedData] = React.useState('');
   const [bigMessage, setBigMessage] = React.useState('');
   const [currentFullName, setCurrentFullName] = React.useState('');
   const [currentFirstName, setFirstName] = React.useState('');
   const [currentLastName, setLastName] = React.useState('');
+  const [currentEmail, setEmail] = React.useState('');
+  const [currentID, setID] = React.useState('');
 
 
   const [increment, setIncrement] = React.useState(0);
@@ -85,7 +52,18 @@ function Dashboard (props) {
     setOpen(true);
   };
   const handleClose = () => {
+    userEdit({
+     id: currentID,
+     first_name: currentFirstName,
+     last_name: currentLastName,
+     email: currentEmail
+   })
     setOpen(false);
+    
+  };
+  const handleCancel = () => {
+    setOpen(false);
+    setEditIndicator(editIndicator+1);
   };
 
   const navigate = useNavigate();  
@@ -110,7 +88,7 @@ function Dashboard (props) {
   };
 
    const toggleAdmin = async (id) => {
-    var toggleResponse = await fetch("/user", {
+    var toggleResponse = await fetch("/user/toggle", {
       method: 'PUT',
       headers: {
         'Content-type': 'application/json',
@@ -121,6 +99,24 @@ function Dashboard (props) {
       })
    });
    console.log('toggle Admin response',toggleResponse);
+   setIncrement(0);
+   };
+ 
+   const userEdit = async (userObj) => {
+    var editResponse = await fetch("/user/edit", {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json',
+        'x-access-token': `${localStorage.getItem(localStorage.getItem('currentEmail'))}`
+      },
+      body: JSON.stringify({
+        _id: userObj.id,
+        first_name: userObj.first_name,
+        last_name: userObj.last_name,
+        email: userObj.email
+      })
+   });
+   console.log('User edit response',editResponse);
    setIncrement(0);
    };
  
@@ -150,10 +146,12 @@ function Dashboard (props) {
         }}>
       <EditIcon onClick={()=>
       {
-        handleClickOpen();
         setCurrentFullName(`${params.row.first_name} ${params.row.last_name}`);
         setFirstName(params.row.first_name);
         setLastName(params.row.last_name);
+        setEmail(params.row.email);
+        setID(params.row.id);
+        handleClickOpen();
     }}/></IconButton>
     )},
     {field: 'toggle_admin', headerName: 'Toggle Admin', 
@@ -210,16 +208,19 @@ console.log('my data' ,dataItems.result);
         setIncrement(increment+1);
   
       }
-
+if (editIndicator != 0){
+  var el = document.querySelector(".email input");
+  console.log(el);
+}
  
 
 
 
-}, [renderedData,increment]) // this diff is necessary
+}, [increment,editIndicator]) // this diff is necessary
 
 
   return (
-
+<div>
 <div>{!bigMessage ? (<Container>
     <h1>Dashboard</h1>
       <div style={{ height: 400, width: '100%' }}>
@@ -232,42 +233,60 @@ console.log('my data' ,dataItems.result);
         />
       </div>
 
+    
+      </Container>) : (<h1>Not Authorized!</h1>)}</div>
       <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Open dialog
-      </Button>
-      <BootstrapDialog
-        onClose={handleClose}
-        aria-labelledby="customized-dialog-title"
-        open={open}
-      >
-        <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-          {currentFullName}
-        </BootstrapDialogTitle>
-        <DialogContent dividers>
-        <TextField
-        id="outlined-name"
-        label="First Name"
-        value={currentFirstName}
-      />
-          <Typography gutterBottom>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-            Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.
-          </Typography>
-          <Typography gutterBottom>
-            Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus
-            magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec
-            ullamcorper nulla non metus auctor fringilla.
-          </Typography>
+
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Subscribe</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            To subscribe to this website, please enter your email address here. We
+            will send updates occasionally.
+          </DialogContentText>
+          <Box      sx={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          flexDirection: 'column',
+          p: 1,
+          m: 1,
+          bgcolor: 'background.paper',
+          borderRadius: 1,
+        }}>
+          <TextField sx={{ my: 2 }}
+          id="outlined-name"
+          className="first_name"
+          label="First Name"
+          defaultValue={currentFirstName}
+          onChange={e => setFirstName(e.target.value)}
+          
+        />
+          <TextField sx={{ my: 2 }}
+          id="outlined-name"
+          className="last_name"
+          label="Last Name"
+          defaultValue={currentLastName}
+          onChange={e => setLastName(e.target.value)}
+        />
+             <TextField sx={{ my: 2 }}
+          type="email"
+          id="outlined-name"
+          className="email"
+          label="email"
+          defaultValue={currentEmail}
+          onChange={e => setEmail(e.target.value)}
+        />
+        </Box >
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClose}>
-            Save changes
-          </Button>
+          <Button color="primary" onClick={handleClose}>Save</Button>
+          <Button color="info" onClick={handleCancel}>Cancel</Button>
         </DialogActions>
-      </BootstrapDialog>
+      </Dialog>
     </div>
-      </Container>) : (<h1>Not Authorized!</h1>)}</div>
+    
+
+      </div>
   );
 }
 

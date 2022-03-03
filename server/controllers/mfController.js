@@ -109,11 +109,6 @@ const  postHello = async (req, res) =>
 
   
 
-//     var user_id = req.user.user_id;
-// await User.updateOne({_id: user_id},{$push: {
-//   memos: [ mongoose.Types.ObjectId(memoId)]
-// }});
-
 
     res.json({_id: memoId});
 }

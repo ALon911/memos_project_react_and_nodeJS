@@ -200,7 +200,9 @@ function App(props) {
             (event) =>
             softDelete(event)    
           }
-            >מחק תזכורת</Button></li></div>;
+            >מחק תזכורת</Button></li>
+            <hr/>
+            </div>;
             
         }else{
           var currentList = <div> 
@@ -211,7 +213,9 @@ function App(props) {
         (event) => 
         softDelete(event)
         }
-        >מחק תזכורת</Button></li></div>;
+        >מחק תזכורת</Button></li>
+        <hr/>
+        </div>;
         }
         return currentList;
             

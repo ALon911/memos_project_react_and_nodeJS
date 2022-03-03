@@ -61,14 +61,7 @@ const editUser = (req, res) =>
 }
 
 const hello_world = async (req, res) => {
-  var data1 = await Memo.find({writtenBy: req.user.user_id});
-  console.log('relevant data');
 
-  var currentUser1 = await User.find({writtenBy: req.user.user_id});
-
-    console.log('data start!!!!')
-    console.log(currentUser1);
-    console.log('data end!!!!')
   
     Memo.find({writtenBy: req.user.user_id}).sort({ createdAt: -1 })
     .then(result => {
@@ -116,10 +109,10 @@ const  postHello = async (req, res) =>
 
   
 
-    var user_id = req.user.user_id;
-await User.updateOne({_id: user_id},{$push: {
-  memos: [ mongoose.Types.ObjectId(memoId)]
-}});
+//     var user_id = req.user.user_id;
+// await User.updateOne({_id: user_id},{$push: {
+//   memos: [ mongoose.Types.ObjectId(memoId)]
+// }});
 
 
     res.json({_id: memoId});
@@ -156,12 +149,7 @@ const deleteMemos = async (req, res) =>
             return handleError(err)};
             
       });
-      var whatt = await Memo.find({writtenBy: req.user.user_id});
-      if (!(whatt && whatt.length)){
-      User.updateOne({_id: req.user.user_id}, { $set: { memos: [] }}, function(err, affected){
-        console.log('affected: ', affected);
-    });
-      }
+  
 
   
 

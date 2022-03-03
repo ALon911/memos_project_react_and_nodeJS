@@ -7,7 +7,6 @@ const userSchema = new Schema({
   email: { type: String, unique: true },
   password: { type: String },
   token: { type: String },
-  memos:  [{ type: mongoose.Schema.Types.ObjectId, Ref: "Memo" } ],
   userType: {
     type: String,
     default: 'user',

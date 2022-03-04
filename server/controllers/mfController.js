@@ -90,12 +90,15 @@ const  postHello = async (req, res) =>
 {
   var memoId;
     console.log(req.body.smart);
-    memo = new Memo({
+    var memo = new Memo({
         ...req.body,
         deleted: req.body.deleted,
         writtenBy: req.user.user_id
     });
-   
+
+
+
+    
     memo.save(function(err, memoItem) {
         if (err) console.log(err);
         else{
@@ -106,9 +109,11 @@ const  postHello = async (req, res) =>
         
 
     });
-
+    
   
-
+    var pushToUser = await User.findOne({ _id: req.user.user_id }).exec(function (error, something) {
+      something.addMemo(memoId);
+   });
 
     res.json({_id: memoId});
 }
@@ -138,16 +143,22 @@ const deleteMemos = async (req, res) =>
   console.log(req.user.user_id);
     if ( req.body._id !=undefined){
 
-    
+
+
     Memo.deleteMany({ _id: req.body._id }, function (err) {
         if (err) {
             return handleError(err)};
             
       });
-  
+
 
   
-
+      User.findOne({ _id: req.user.user_id }).exec(function (error, something) {
+        req.body._id.map( item => {
+          something.removeMemo(item);
+        })
+        
+     });
       // console.log('alon check if success ? ',result);
       res.send('deleted');
 }

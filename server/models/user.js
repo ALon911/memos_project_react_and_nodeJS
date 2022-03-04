@@ -29,11 +29,16 @@ memosBank: {
   ]
 }
 });
-userSchema.methods.removeMemo = function(memoId) {
-  const updatedMemoItems = this.memosBank.memos.filter(item => {
-    return item.memoId.toString() != memoId;
+userSchema.methods.removeMemo = async function(memoItems) {
+  await memoItems.map(memoId => {
+  
+    const updatedMemoItems =  this.memosBank.memos.filter(item => {
+      return item.memoId.toString() != memoId;
+    });
+    this.memosBank.memos = updatedMemoItems;
+    
+
   });
-  this.memosBank.memos = updatedMemoItems;
   return this.save();
 };
 

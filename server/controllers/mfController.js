@@ -150,9 +150,9 @@ const deleteMemos = async (req, res) =>
     await Memo.deleteMany({ _id: req.body._id });
        
       var user1 = await User.findOne({ _id: req.user.user_id });
-      req.body._id.map( item => {
-        user1.removeMemo(item);
-      });
+
+      user1.removeMemo( req.body._id);
+   
       // console.log('alon check if success ? ',result);
       res.send('deleted');
     }

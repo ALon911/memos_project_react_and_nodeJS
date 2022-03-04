@@ -29,8 +29,8 @@ memosBank: {
   ]
 }
 });
-userSchema.methods.removeMemo = async function(memoItems) {
-  await memoItems.map(memoId => {
+userSchema.methods.removeMemo = async function(memoIds) {
+  await memoIds.map(memoId => {
   
     const updatedMemoItems =  this.memosBank.memos.filter(item => {
       return item.memoId.toString() != memoId;

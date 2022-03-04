@@ -88,6 +88,7 @@ const hello_world = async (req, res) => {
   
 const  postHello = async (req, res) =>
 {
+  if (req.body.description != ''){
   var memoId;
     console.log(req.body.smart);
     var memo = new Memo({
@@ -111,11 +112,14 @@ const  postHello = async (req, res) =>
     });
     
   
-    var pushToUser = await User.findOne({ _id: req.user.user_id }).exec(function (error, something) {
-      something.addMemo(memoId);
-   });
+    var user1 = await User.findOne({ _id: req.user.user_id });
+     user1.addMemo(memoId);
+   
 
     res.json({_id: memoId});
+  }else{
+    res.json('empty description');
+  }
 }
 const editMemo = (req, res) =>
 {
@@ -143,26 +147,17 @@ const deleteMemos = async (req, res) =>
   console.log(req.user.user_id);
     if ( req.body._id !=undefined){
 
-
-
-    Memo.deleteMany({ _id: req.body._id }, function (err) {
-        if (err) {
-            return handleError(err)};
-            
+    await Memo.deleteMany({ _id: req.body._id });
+       
+      var user1 = await User.findOne({ _id: req.user.user_id });
+      req.body._id.map( item => {
+        user1.removeMemo(item);
       });
-
-
-  
-      User.findOne({ _id: req.user.user_id }).exec(function (error, something) {
-        req.body._id.map( item => {
-          something.removeMemo(item);
-        })
-        
-     });
       // console.log('alon check if success ? ',result);
       res.send('deleted');
+    }
 }
-}
+
 const register = async (req, res) => {
 
     // Our register logic starts here

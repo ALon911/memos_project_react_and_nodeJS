@@ -1,8 +1,9 @@
 import React from "react";
 import logo from "./logo.svg";
-import "./App.css";
+
 import Button from 'react-bootstrap/Button';
 import Navbar1 from './navbar1';
+import { Container, Col, Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   BrowserRouter as Router,
@@ -11,6 +12,7 @@ import {
   Link,
   Redirect
 } from "react-router-dom";
+import "./App.css";
 function App(props) {
 
 
@@ -82,6 +84,7 @@ function App(props) {
   };
 
   const hardDeleteAll = () =>{ 
+    if(window.confirm('Really delete everything?')){
     var ids =[];
     info.map(
       (val)=> {  
@@ -113,6 +116,7 @@ function App(props) {
     )
   )
 
+}
 };
   const handleAddMemo = () => {
  
@@ -192,30 +196,36 @@ function App(props) {
             console.log(data1.deleted);
             console.log(data1.deleted);
             if (data1.deleted == false){
-            var currentList = <div> 
-              <li className="m-4 memo">{data1.description}
+            var currentList = 
+            <Container>
+  <Row className="align-items-center">
+    <Col xs={8}><p>{data1.description}
               <br/>
-        תאריך: {data1.createdAt}
-            <Button id={data1._id} name={data1._id} type="button" onClick={
+        תאריך: {data1.createdAt}</p></Col>
+    <Col><Button className="float-end"  id={data1._id} name={data1._id} type="button" onClick={
             (event) =>
             softDelete(event)    
           }
-            >מחק תזכורת</Button></li>
-            <hr/>
-            </div>;
+            >מחק תזכורת</Button></Col>
+  </Row>
+  <hr/>
+</Container>
+            
             
         }else{
-          var currentList = <div> 
-        <li className="m-4 memo"><strike>{data1.description}</strike>
-        <br/>
-        תאריך: {data1.createdAt}
-        <Button id={data1._id} name={data1._id} type="button" onClick={
-        (event) => 
-        softDelete(event)
-        }
-        >מחק תזכורת</Button></li>
-        <hr/>
-        </div>;
+          var currentList =             <Container>
+          <Row className="align-items-center">
+            <Col xs={8}><p><strike>{data1.description}
+            <br/>
+                תאריך: {data1.createdAt}</strike></p></Col>
+            <Col><Button className="float-end" id={data1._id} name={data1._id} type="button" onClick={
+                    (event) =>
+                    softDelete(event)    
+                  }
+                    >מחק תזכורת</Button></Col>
+          </Row>
+          <hr/>
+        </Container>
         }
         return currentList;
             
@@ -256,18 +266,23 @@ function App(props) {
     <div className="App">
 
       <h1>Welcome {name} !!</h1>
+      
       <header className="App-header" >
-        
-        <input className="memo" type="text" value={text} onKeyPress={(e) => handleAddMemoEnter(e)} onChange={handleText} />
-        <Button type="button" variant="success"  onClick={handleAddMemo}>
-        הוסף תזכורת
-        </Button>
-        <p>{!data ? "Loading..." : data}</p>
- 
-        
-        <Button type="button" variant="danger" onClick={hardDeleteAll}>
+        <Container className="my-5">
+          <Button type="button" variant="danger" onClick={hardDeleteAll}>
         מחיקה סופית
         </Button>
+        </Container>
+     
+        <input className="memo" type="text" value={text} onKeyPress={(e) => handleAddMemoEnter(e)} onChange={handleText} />
+        <Button className="mt-2" type="button" variant="success"  onClick={handleAddMemo}>
+        הוסף תזכורת
+        </Button>
+        <Container className="mt-5">{!data ? "Loading..." : data}</Container>
+        
+ 
+        
+
       </header>
     </div>
   );

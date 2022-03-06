@@ -37,7 +37,7 @@
   }
 }
 
-li, .memo{
+li, .memo, p {
   font-size: 20px;
 }
 
@@ -57,3 +57,4 @@ li, .memo{
 .MuiDataGrid-root .MuiDataGrid-cell:focus , .MuiDataGrid-cell{
      outline: none !important;
 }
+

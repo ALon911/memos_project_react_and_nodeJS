@@ -17,39 +17,43 @@ const userSchema = new Schema({
   
     
 },
-memosBank: {
-  memos: [
-    {
+memos: [
+  {
       memoId: {
-        type: Schema.Types.ObjectId,
-        ref: 'Product',
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Memo',
         required: true
       }
-    }
-  ]
-}
+    
+  }
+]
 });
 userSchema.methods.removeMemo = async function(memoIds) {
+
   await memoIds.map(memoId => {
-  
-    const updatedMemoItems =  this.memosBank.memos.filter(item => {
+    
+    const updatedMemoItems =  this.memos.filter(item => {
       return item.memoId.toString() != memoId;
     });
-    this.memosBank.memos = updatedMemoItems;
+    this.memos = updatedMemoItems;
     
 
   });
+
   return this.save();
 };
 
 userSchema.methods.addMemo = function(memoId) {
-  const updatedMemos = [...this.memosBank.memos];
+
+  const updatedMemos = [...this.memos];
+
   updatedMemos.push(
     {memoId: memoId}
   );
 
-    this.memosBank.memos = updatedMemos;
-  return this.save();
+    this.memos = updatedMemos;
+
+    return this.save();
 
 }
 

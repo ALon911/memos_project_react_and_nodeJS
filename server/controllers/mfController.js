@@ -1,10 +1,14 @@
 const { stringify } = require('nodemon/lib/utils');
 const Memo = require('../models/memo');
 const User = require('../models/user');
+const Token = require('../models/token');
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 
+clientURL = 'localhost:3000';
 const getUsers = async (req, res) => {
   result = await User.find({});
   console.log('alon data', result);
@@ -244,6 +248,93 @@ const register = async (req, res) => {
     }
     // Our register logic ends here
   }
+
+  const resetPassword = async (userId, token, password) => {
+    let passwordResetToken = await Token.findOne({ userId });
+    if (!passwordResetToken) {
+      return false;
+
+    }
+    const isValid = await bcrypt.compare(token, passwordResetToken.token);
+    if (!isValid) {
+      return false;
+    }
+    const hash = await bcrypt.hash(password, 10);
+    await User.updateOne(
+      { _id: userId },
+      { $set: { password: hash } },
+      { new: true }
+    );
+    const user = await User.findById({ _id: userId });
+  console.log(user.email,"Password Reset Successfully");
+  await passwordResetToken.deleteOne();
+  return true;
+
+  };
+  const requestPasswordResetController = async (req, res, next) => {
+    
+
+
+    const user = await User.findOne({ email: req.body.email });
+
+    if (!user) throw new Error("User does not exist");
+    let token = await Token.findOne({ userId: user._id });
+    if (token) await token.deleteOne();
+    let resetToken = crypto.randomBytes(32).toString("hex");
+    const hash = await bcrypt.hash(resetToken, 10);
+  
+    await new Token({
+      userId: user._id,
+      token: hash,
+      createdAt: Date.now(),
+    }).save();
+  
+    const link = `${clientURL}/passwordReset?token=${resetToken}&id=${user._id}`;
+
+    let transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: "cute.xy1@gmail.com",
+        pass: "ztglvvynqcqcdvxk",
+      },
+    });
+    var message = {
+      from: "alon.najman@gmail.com",
+      to: "alon.najman@gmail.com",
+      subject: "Message title",
+      text: "Plaintext version of the message",
+      html: `<html>
+      <head>
+          <style>
+          </style>
+      </head>
+      <body>
+          <p>Hi ${user.first_name},</p>
+          <p>You requested to reset your password.</p>
+          <p> Please, click the link below to reset your password</p>
+          <a href="http://${link}">Reset Password</a>
+      </body>
+  </html>`
+    };
+    var goodjob = await transporter.sendMail(message);
+    console.log(goodjob.info);
+    return res.status(200).send('good');
+  };
+  const resetPasswordController = async (req, res, next) => {
+    const resetPasswordService = await resetPassword(
+      req.body.userId,
+      req.body.token,
+      req.body.password
+    );
+    if (resetPasswordService)
+    return res.json(resetPasswordService);
+    else{
+      return res.status(400).json({error: "Invalid Token or something"});
+    }
+  };
+
 module.exports = {
     hello_world,
     postHello,
@@ -254,5 +345,7 @@ module.exports = {
     getUsers,
     deleteUser,
     toggleUser,
-    editUser
+    editUser,
+    resetPasswordController,
+    requestPasswordResetController
 }

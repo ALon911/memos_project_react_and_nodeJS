@@ -12,7 +12,8 @@ router.delete('/delete',auth, mfController.deleteMemos);
 
 router.post("/register1", mfController.register);
 router.post("/login", mfController.login);
-  
+router.post("/auth/resetPassword", mfController.resetPasswordController);
+router.post("/auth/requestResetPassword", mfController.requestPasswordResetController);  
   // ...
 
 

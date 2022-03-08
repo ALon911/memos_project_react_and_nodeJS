@@ -2,19 +2,22 @@ import { useState,useEffect } from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
 import {
   Home,
   Memo,
   Register,
   Navbar1,
   Dashboard,
+  Reset
 } from "./components";
 
 
 function App1() {
-const [isLoggedIn, setLoggedIn] = useState(false);
-const [email1, setEmail1] = useState("");
-const [currentPath, setCurrentPath] = useState("");
+  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [email1, setEmail1] = useState("");
+  const [currentPath, setCurrentPath] = useState("");
+
 useEffect(() => {
 
   setCurrentPath(window.location.pathname);
@@ -46,6 +49,9 @@ useEffect(() => {
    getPath={(currentPath1) => setCurrentPath(currentPath1)}
    activateLogin={(val) => setLoggedIn(val)}/>} />
    <Route path="/memos" element={<Memo  isLoggedIn={isLoggedIn} email1={email1} />} />
+   
+   <Route path="/reset" element={<Reset />} />
+  
    <Route path="/register" element={<Register Changedata={(userEmail) => setEmail1(userEmail)}  isLoggedIn={isLoggedIn}  activateLogin={(val) => setLoggedIn(val)}/>} />
    <Route path="/dashboard" element={<Dashboard currentPath={currentPath} isLoggedIn={isLoggedIn}
    Changedata={(userEmail) => setEmail1(userEmail)} 

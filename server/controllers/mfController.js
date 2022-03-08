@@ -289,7 +289,7 @@ const register = async (req, res) => {
       createdAt: Date.now(),
     }).save();
   
-    const link = `${clientURL}/passwordReset?token=${resetToken}&id=${user._id}`;
+    const link = `${clientURL}/reset?token=${resetToken}&id=${user._id}`;
 
     let transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",

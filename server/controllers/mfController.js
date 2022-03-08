@@ -297,7 +297,7 @@ const register = async (req, res) => {
       secure: true,
       auth: {
         user: "cute.xy1@gmail.com",
-        pass: "ztglvvynqcqcdvxk",
+        pass: `${process.env.gmailPass}`,
       },
     });
     var message = {

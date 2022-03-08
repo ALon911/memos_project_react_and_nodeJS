@@ -199,7 +199,7 @@ function App(props) {
             var currentList = 
             <Container>
   <Row className="align-items-center">
-    <Col xs={8}><p><u>תיאור:</u> {data1.description}
+    <Col xs={8}><p><u>תיאור</u>: {data1.description}
               <br/>
               
               <u>תאריך</u>: {data1.createdAt}</p></Col>
@@ -216,7 +216,7 @@ function App(props) {
         }else{
           var currentList =             <Container>
           <Row className="align-items-center">
-            <Col xs={8}><p><strike><u>תיאור:</u> {data1.description}
+            <Col xs={8}><p><strike><u>תיאור</u>: {data1.description}
             <br/>
             <u>תאריך</u>: {data1.createdAt}</strike></p></Col>
             <Col><Button className="float-end" id={data1._id} name={data1._id} type="button" onClick={

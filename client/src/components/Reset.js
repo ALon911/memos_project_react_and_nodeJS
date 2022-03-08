@@ -21,7 +21,7 @@ function Reset(props) {
       var userId = props.userId;
       var userToken = props.userToken;
       console.log("password: " + password);
-      fetch('/register1', {
+      fetch('/auth/resetPassword', {
         headers: { "Content-Type": "application/json; charset=utf-8" },
         method: 'POST',
         body: JSON.stringify({

@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken");
 const User = require('../models/user');
 const mongoose = require("mongoose");
-const config = process.env;
+const path = require('path')
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 
 const isAdmin = async (req, res, next) => {
   const token =

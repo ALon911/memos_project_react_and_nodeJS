@@ -7,8 +7,13 @@ const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
+const path = require('path')
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
+
 
 clientURL = 'localhost:3000';
+
+
 const getUsers = async (req, res) => {
   result = await User.find({});
   console.log('alon data', result);
@@ -290,14 +295,14 @@ const register = async (req, res) => {
     }).save();
   
     const link = `${clientURL}/reset?token=${resetToken}&id=${user._id}`;
-
+    console.log(process.env.GMAIL_PASS);
     let transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 465,
       secure: true,
       auth: {
         user: "cute.xy1@gmail.com",
-        pass: `${process.env.gmailPass}`,
+        pass: process.env.GMAIL_PASS,
       },
     });
     var message = {

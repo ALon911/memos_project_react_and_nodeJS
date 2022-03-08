@@ -9,7 +9,8 @@ import {
   Register,
   Navbar1,
   Dashboard,
-  Reset
+  Reset,
+  RequestReset
 } from "./components";
 
 
@@ -51,6 +52,7 @@ useEffect(() => {
    <Route path="/memos" element={<Memo  isLoggedIn={isLoggedIn} email1={email1} />} />
    
    <Route path="/reset" element={<Reset />} />
+   <Route path="/request_reset" element={<RequestReset/>} />
   
    <Route path="/register" element={<Register Changedata={(userEmail) => setEmail1(userEmail)}  isLoggedIn={isLoggedIn}  activateLogin={(val) => setLoggedIn(val)}/>} />
    <Route path="/dashboard" element={<Dashboard currentPath={currentPath} isLoggedIn={isLoggedIn}

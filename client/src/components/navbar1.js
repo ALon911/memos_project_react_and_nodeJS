@@ -33,6 +33,7 @@ const Navbar1 = (props) => {
  <Nav>
  <Nav.Link as={Link} to='/dashboard'>דשבורד</Nav.Link>
  {  !props.isLoggedIn && (<Nav.Link as={Link} to='/login'>התחברות</Nav.Link>)}
+ {  !props.isLoggedIn && (<Nav.Link as={Link} to='/request_reset'>שכחתי סיסמא</Nav.Link>)}
          {!props.isLoggedIn &&  (<Nav.Link as={Link} to='/register'>הרשמה</Nav.Link>)}
          {props.isLoggedIn &&  (<Nav.Link as={Link} to='/memos'>תזכורות</Nav.Link>)}
           {props.isLoggedIn && (<Nav.Link onClick={   (event) => logout(event) }>התנתקות</Nav.Link>)}

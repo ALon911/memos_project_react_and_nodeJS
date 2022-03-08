@@ -263,17 +263,15 @@ const register = async (req, res) => {
     const isValid = await bcrypt.compare(token, passwordResetToken.token);
     if (!isValid) {
       return false;
-    }
-    const hash = await bcrypt.hash(password, 10);
-    await User.updateOne(
-      { _id: userId },
-      { $set: { password: hash } },
-      { new: true }
-    );
-    const user = await User.findById({ _id: userId });
-  console.log(user.email,"Password Reset Successfully");
+    }else{
+    let hash1 = await bcrypt.hash(password, 10);
+
+    var user1 = await User.findOne({ _id: userId });
+    user1.password = hash1;
+    user1.save();
   await passwordResetToken.deleteOne();
   return true;
+}
 
   };
   const requestPasswordResetController = async (req, res, next) => {
@@ -301,14 +299,14 @@ const register = async (req, res) => {
       port: 465,
       secure: true,
       auth: {
-        user: "cute.xy1@gmail.com",
+        user: process.env.GMAIL_USER,
         pass: process.env.GMAIL_PASS,
       },
     });
     var message = {
-      from: "alon.najman@gmail.com",
-      to: "alon.najman@gmail.com",
-      subject: "Message title",
+      from: process.env.GMAIL_USER,
+      to: req.body.email,
+      subject: "Alon's Reset System",
       text: "Plaintext version of the message",
       html: `<html>
       <head>
@@ -329,17 +327,12 @@ const register = async (req, res) => {
   };
   const resetPasswordController = async (req, res, next) => {
     const resetPasswordService = await resetPassword(
-      req.body.userId,
+      req.body.user_id,
       req.body.token,
       req.body.password
     );
-    if (resetPasswordService)
     return res.json(resetPasswordService);
-    else{
-      return res.status(400).json({error: "Invalid Token or something"});
-    }
   };
-
 module.exports = {
     hello_world,
     postHello,

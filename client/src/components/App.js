@@ -12,10 +12,39 @@ import {
   Link,
   Redirect
 } from "react-router-dom";
+import "../files/atcb.css";
 import "./App.css";
+import { atcb_init } from 'add-to-calendar-button';
+
+
 function App(props) {
 
 
+  const [eventSchedule, setEventSchedule] = React.useState(`{
+    "event": {
+      "@context":"https://schema.org",
+      "@type":"Event",
+      "name":"Add the title of your event",
+      "description":"A nice description does not hurt",
+      "startDate":"2022-02-21T10:13",
+      "endDate":"2022-03-24T17:57",
+      "location":"Somewhere over the rainbow"
+    },
+    "label":"Add to Calendar",
+    "options":[
+      "Apple",
+      "Google",
+      "iCal",
+      "Microsoft365",
+      "MicrosoftTeams",
+      "Outlook.com",
+      "Yahoo"
+    ],
+    "timeZone":"Europe/Berlin",
+    "timeZoneOffset":"+01:00",
+    "trigger":"click",
+    "iCalFileName":"Reminder-Event"
+  }`);
   const [name, setName] = React.useState('');
   const [text, setText] = React.useState('');
   const [data, setData] = React.useState(null);
@@ -175,6 +204,7 @@ function App(props) {
 
   };
   React.useEffect(() => {
+
     setName(localStorage.getItem('currentName'));
     console.log('alon test start');
     console.log(props);
@@ -189,29 +219,65 @@ function App(props) {
     document.title = "Alon's Memo App";
 
     firstTime();
-
+    var mutate1 ;
     function renderElements (elementObj){
+      
         return elementObj.map((data1) =>{
+          mutate1 = `{
+            "event": {
+              "@context":"https://schema.org",
+              "@type":"Event",
+              "name":"Add the title of your event",
+              "description": "${data1.description}",
+              "startDate":"2022-02-21T10:13",
+              "endDate":"2022-03-24T17:57",
+              "location":"Somewhere over the rainbow"
+            },
+            "label":"Add to Calendar",
+            "options":[
+              "Apple",
+              "Google",
+              "Outlook.com"
+            ],
+            "timeZone":"Europe/Berlin",
+            "timeZoneOffset":"+01:00",
+            "trigger":"click",
+            "iCalFileName":"Reminder-Event"
+          }`;
             console.log(data1.deleted);
             console.log(data1.deleted);
             console.log(data1.deleted);
             if (data1.deleted == false){
             var currentList = 
-            <Container>
+          <div>  
+      
   <Row className="align-items-center">
-    <Col xs={8}><p><u>תיאור</u>: {data1.description}
+    <Col xs={6}><p><u>תיאור</u>: {data1.description}
               <br/>
               
               <u>תאריך</u>: {data1.createdAt}</p></Col>
-    <Col><Button className="float-end"  id={data1._id} name={data1._id} type="button" onClick={
+    <Col xs={3}><Button className="float-end"  id={data1._id} name={data1._id} type="button" onClick={
             (event) =>
             softDelete(event)    
           }
-            >מחק תזכורת</Button></Col>
+            >מחק תזכורת</Button> </Col>
+    <Col xs={3}> 
+    <div className="atcb">  
+        <script type="application/ld+json">
+        {mutate1}
+        </script>
+        </div> </Col>
+
+ 
+
   </Row>
-  <hr/>
-</Container>
-            
+  
+      
+
+
+  
+        <hr/>  
+</div>
             
         }else{
           var currentList =             <Container>
@@ -223,7 +289,8 @@ function App(props) {
                     (event) =>
                     softDelete(event)    
                   }
-                    >מחק תזכורת</Button></Col>
+                    >מחק תזכורת</Button>     </Col>
+      
           </Row>
           <hr/>
         </Container>
@@ -254,6 +321,7 @@ function App(props) {
         var memos = renderElements(dataItems);
       setData(memos);
       setInfo(dataItems);
+      atcb_init();
       console.log(dataItems);
       }
   );
@@ -267,7 +335,10 @@ function App(props) {
     <div className="App">
 
       <h1>Welcome {name} !!</h1>
-      
+
+
+
+
       <header className="App-header" >
         <Container className="my-5">
           <Button type="button" variant="danger" onClick={hardDeleteAll}>
@@ -279,12 +350,13 @@ function App(props) {
         <Button className="mt-2" type="button" variant="success"  onClick={handleAddMemo}>
         הוסף תזכורת
         </Button>
-        <Container className="mt-5">{!data ? "Loading..." : data}</Container>
         
  
         
 
+        <div className="mt-5">{!data ? "Loading..." : data}</div>
       </header>
+      
     </div>
   );
 }

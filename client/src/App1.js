@@ -1,6 +1,6 @@
 import { useState,useEffect } from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
+
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import {
@@ -13,13 +13,6 @@ import {
   RequestReset
 } from "./components";
 
-// Create the function
-export function AddLibrary(urlOfTheLibrary) {
-  const script = document.createElement('script');
-  script.src = urlOfTheLibrary;
-  script.async = true;
-  document.body.appendChild(script);
-};
 
 
 function App1() {
@@ -70,11 +63,10 @@ useEffect(() => {
  </Routes>
 
 </Router>
+
+
     </div>
   );
-
-  {AddLibrary(
-    'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js')}
 }
 
 export default App1;

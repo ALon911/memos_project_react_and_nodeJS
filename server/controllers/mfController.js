@@ -293,18 +293,18 @@ const register = async (req, res) => {
     }).save();
   
     const link = `${clientURL}/reset?token=${resetToken}&id=${user._id}`;
-    console.log(process.env.GMAIL_PASS);
+    console.log(process.env.MAIL_PASS);
     let transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
+      host: process.env.SERVER_SMTP,
       port: 465,
       secure: true,
       auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS,
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS,
       },
     });
     var message = {
-      from: process.env.GMAIL_USER,
+      from: process.env.MAIL_USER,
       to: req.body.email,
       subject: "Alon's Reset System",
       text: "Plaintext version of the message",

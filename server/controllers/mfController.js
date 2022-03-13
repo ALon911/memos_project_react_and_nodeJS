@@ -246,8 +246,8 @@ const register = async (req, res) => {
   
         // user
         res.status(200).json(user);
-      }
-      res.status(400).json({error: "Invalid Credentials"});
+      }else{ res.status(400).json({error: "Invalid Credentials"});}
+     
     } catch (err) {
       console.log(err);
     }

@@ -31,10 +31,10 @@
   font-size: 16px;
   font-weight: 600;
   line-height: 24px;
-  margin: 10px auto;
+  /* margin: 10px auto; */
   max-width: 300px;
   min-width: 150px;
-  padding: 10px 16px 11px 16px;
+  /* padding: 5px 8px 5px 8px; */
   position: relative;
   text-align: center;
   touch-action: manipulation;  

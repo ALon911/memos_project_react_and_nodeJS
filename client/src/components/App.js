@@ -1,6 +1,5 @@
 import React from "react";
 import logo from "./logo.svg";
-
 import Button from 'react-bootstrap/Button';
 import Navbar1 from './navbar1';
 import { Container, Col, Row } from 'react-bootstrap';
@@ -12,39 +11,35 @@ import {
   Link,
   Redirect
 } from "react-router-dom";
-import "../files/atcb.css";
+
 import "./App.css";
-import { atcb_init } from 'add-to-calendar-button';
-
-
+import AddToCalendarHOC from 'react-add-to-calendar-hoc';
+import CalendarModal from './Modal';
+import { jsx, css } from '@emotion/react';
+import { SHARE_SITES } from "./enums";
+import moment from 'moment-timezone';
 function App(props) {
+  const AddToCalendarModal = AddToCalendarHOC(Button, CalendarModal);
 
 
-  const [eventSchedule, setEventSchedule] = React.useState(`{
-    "event": {
-      "@context":"https://schema.org",
-      "@type":"Event",
-      "name":"Add the title of your event",
-      "description":"A nice description does not hurt",
-      "startDate":"2022-02-21T10:13",
-      "endDate":"2022-03-24T17:57",
-      "location":"Somewhere over the rainbow"
-    },
-    "label":"Add to Calendar",
-    "options":[
-      "Apple",
-      "Google",
-      "iCal",
-      "Microsoft365",
-      "MicrosoftTeams",
-      "Outlook.com",
-      "Yahoo"
-    ],
-    "timeZone":"Europe/Berlin",
-    "timeZoneOffset":"+01:00",
-    "trigger":"click",
-    "iCalFileName":"Reminder-Event"
-  }`);
+
+  const componentStyles = css`
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  padding: 0 0 30px;
+  @media (min-width: 768px) {
+    width: 50%;
+  }
+`;
+  const linkStyles = css`
+  text-decoration: none;
+  display: block;
+  color: #E42D2D;
+  font-size: 18px;
+  text-align: center;
+  padding: 6px;
+`;
   const [name, setName] = React.useState('');
   const [text, setText] = React.useState('');
   const [data, setData] = React.useState(null);
@@ -167,8 +162,11 @@ function App(props) {
        
       setInfo(info.concat({_id: data._id, description: text, deleted: false}));
       setText('');
+      setCount1(count1+1); 
+  
     })
-    setCount1(count1+1); 
+
+
     
   };
   const handleAddMemoEnter = (e) => {
@@ -193,6 +191,7 @@ function App(props) {
       setText('');
     })
     setCount1(count1+1); 
+
   }
   };
 
@@ -219,54 +218,54 @@ function App(props) {
     document.title = "Alon's Memo App";
 
     firstTime();
-    var mutate1 ;
+  
     function renderElements (elementObj){
       
         return elementObj.map((data1) =>{
-          mutate1 = `{
-            "event": {
-              "@context":"https://schema.org",
-              "@type":"Event",
-              "name":"Add the title of your event",
-              "description": "${data1.description}",
-              "startDate":"2022-02-21T10:13",
-              "endDate":"2022-03-24T17:57",
-              "location":"Somewhere over the rainbow"
-            },
-            "label":"Add to Calendar",
-            "options":[
-              "Apple",
-              "Google",
-              "Outlook.com"
-            ],
-            "timeZone":"Europe/Berlin",
-            "timeZoneOffset":"+01:00",
-            "trigger":"click",
-            "iCalFileName":"Reminder-Event"
-          }`;
             console.log(data1.deleted);
             console.log(data1.deleted);
             console.log(data1.deleted);
+            const startDatetime = moment().utc().add(2, 'days');
+            const endDatetime = startDatetime.clone().add(2, 'hours');
+    
+            var eventSchedule1 = {
+              description: data1.description,
+              duration: moment.duration(endDatetime.diff(startDatetime)).asHours(),
+              endDatetime: endDatetime.format('YYYYMMDDTHHmmssZ'),
+              location: 'NYC',
+              startDatetime: startDatetime.format('YYYYMMDDTHHmmssZ'),
+              title: 'Super Fun Event',
+            }
             if (data1.deleted == false){
             var currentList = 
-          <div>  
+          <Container>  
       
   <Row className="align-items-center">
-    <Col xs={6}><p><u>תיאור</u>: {data1.description}
+    <Col xs={6} ><p><u>תיאור</u>: {data1.description}
               <br/>
               
               <u>תאריך</u>: {data1.createdAt}</p></Col>
-    <Col xs={3}><Button className="float-end"  id={data1._id} name={data1._id} type="button" onClick={
+    <Col xs={2} ><Button  id={data1._id} name={data1._id} type="button" onClick={
             (event) =>
             softDelete(event)    
           }
-            >מחק תזכורת</Button> </Col>
-    <Col xs={3}> 
-    <div className="atcb">  
-        <script type="application/ld+json">
-        {mutate1}
-        </script>
-        </div> </Col>
+            >מחק</Button> </Col>
+    <Col  xs={12} md={4}> 
+    <AddToCalendarModal
+    className={componentStyles}
+    buttonText="Custom Button Text"
+    linkProps={{
+      className: linkStyles,
+      style: linkStyles
+    }}
+    event={eventSchedule1}
+    items={[SHARE_SITES.GOOGLE, SHARE_SITES.ICAL]}
+
+  />
+ 
+    
+       
+       </Col>
 
  
 
@@ -277,8 +276,8 @@ function App(props) {
 
   
         <hr/>  
-</div>
-            
+</Container>
+     
         }else{
           var currentList =             <Container>
           <Row className="align-items-center">
@@ -319,12 +318,15 @@ function App(props) {
         
         console.log(dataItems);
         var memos = renderElements(dataItems);
-      setData(memos);
-      setInfo(dataItems);
-      atcb_init();
+        setData(memos);
+        setInfo(dataItems);
+   
+        
       console.log(dataItems);
+
       }
   );
+
     }
 
   }, [count1]);
@@ -332,32 +334,22 @@ function App(props) {
 
 
   return (
-    <div className="App">
-
+      <Container className="App">
       <h1>Welcome {name} !!</h1>
-
-
-
-
-      <header className="App-header" >
-        <Container className="my-5">
           <Button type="button" variant="danger" onClick={hardDeleteAll}>
         מחיקה סופית
         </Button>
-        </Container>
-     
-        <input className="memo" type="text" value={text} onKeyPress={(e) => handleAddMemoEnter(e)} onChange={handleText} />
-        <Button className="mt-2" type="button" variant="success"  onClick={handleAddMemo}>
+      <Row className="align-items-center">  
+        <Col className="align-items-center" xs={12}><input className="memo" type="text" value={text} onKeyPress={(e) => handleAddMemoEnter(e)} onChange={handleText} />
+        <Button type="button" variant="success"  onClick={handleAddMemo}>
         הוסף תזכורת
         </Button>
-        
- 
-        
+        </Col>
+      </Row>
 
-        <div className="mt-5">{!data ? "Loading..." : data}</div>
-      </header>
-      
-    </div>
+        <span key={count1} className="mt-5">{!data ? "Loading..." : data}</span>
+        </Container>
+
   );
 }
 

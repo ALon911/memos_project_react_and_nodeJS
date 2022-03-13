@@ -6,24 +6,9 @@ import { Button, Container, Col, Row} from 'react-bootstrap';
 import './App.css';
 const styles = {}
 const containerStyles = css`
-position: sticky; top: 50px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  width: 100px;
-  height: 100px;
-  margin: 0 auto;
-  top: 50%;
-  left: 0;
-  right: 0;
-  transform: translateY(-50%);
-  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.3);
-  padding: 30px;
-  background-color: #FFF;
-  &:focus {
-    outline: none;
-  }
+top: 50%;
+left: 50%;
+position: fixed !important;
 `;
 
 export default function CalendarModal({
@@ -35,9 +20,13 @@ export default function CalendarModal({
         document.getElementsByTagName('html')[0].setAttribute("dir", "rtl");
     }
     const [someHtml, setSomeHtml] = React.useState([]);
-
+   
     React.useEffect(() => {
+      if (isOpen){
         document.getElementsByTagName('html')[0].setAttribute("dir", "ltr");
+      }else{
+        document.getElementsByTagName('html')[0].setAttribute("dir", "rtl");
+      }
  console.log(children);
 
  var someData = [];
@@ -60,9 +49,15 @@ export default function CalendarModal({
   return (
     <Modal
     style={{}}
+    className="mymodal"
     portalClassName="modal1"
+    overlayClassName="myoverlay"
       isOpen={isOpen}
-      onRequestClose={onRequestClose}
+      onRequestClose={
+        (e) =>{
+            changingToRTL();
+            onRequestClose(e); 
+        }}
       shouldCloseOnOverlayClick={true}
     >
         <Container className="align-items-center" >
@@ -71,10 +66,10 @@ export default function CalendarModal({
         {someHtml}
         </ul>
         <Button onClick={
-            (e) =>{
-                changingToRTL();
-                onRequestClose(e); 
-            }}>Cancel</Button>
+        (e) =>{
+            changingToRTL();
+            onRequestClose(e); 
+        }}>Cancel</Button>
         </Container>
       
 

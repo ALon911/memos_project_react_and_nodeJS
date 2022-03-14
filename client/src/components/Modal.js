@@ -38,7 +38,7 @@ export default function CalendarModal({
      console.log(children[item], 'test123 alon123');
      if (children[item].key =='iCal'){
       someData.push(<li>{children[item]}</li>);
-     }else{ someData.push(<a href={encodeURI(children[item].props.href)}><li>{children[item].key}</li></a>);}
+     }else{ someData.push(<a href={children[item].props.href}><li>{children[item].key}</li></a>);}
    
     // console.log(children[item].props.href,'test123');
      }
